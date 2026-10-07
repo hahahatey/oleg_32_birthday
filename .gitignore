@@ -3,4 +3,4 @@ dist/
 video/out/
 .DS_Store
 *.log
-.env*
+.env*.local

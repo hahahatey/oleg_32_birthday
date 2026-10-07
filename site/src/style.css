@@ -376,7 +376,8 @@ body::after {
   background: rgba(255, 225, 77, 0.08);
   font-size: 24px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  /* No transform transition: it fights GSAP, which animates transforms here. */
+  transition: background 0.2s;
 }
 
 .dice:hover {
@@ -455,11 +456,6 @@ body::after {
   color: #fff;
   box-shadow: 0 0 34px rgba(255, 43, 214, 0.55);
   animation: shimmer 4s linear infinite;
-  transition: transform 0.15s;
-}
-
-.submit:not(:disabled):hover {
-  transform: scale(1.02);
 }
 
 .submit:disabled {
@@ -550,9 +546,10 @@ body::after {
     width: 46px;
     height: 46px;
   }
+  /* 16px minimum: smaller inputs make iOS zoom in on focus, and the form no longer fits. */
   .slot__input {
     padding: 14px 12px;
-    font-size: 15px;
+    font-size: 16px;
   }
   .cta {
     font-size: 16px;
