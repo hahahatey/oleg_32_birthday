@@ -1,8 +1,8 @@
 #!/bin/sh
 # Renders both orientations, then encodes web-sized loops + posters into out/.
-# Height is capped at 1280: many Android decoders reject 1080x1920 portrait video.
+# Height is capped at 1080: many Android decoders top out at 1920x1088 and don't swap axes for portrait.
 set -e
-scale="scale=-2:'min(1280,ih)'"
+scale="scale=-2:'min(1080,ih)'"
 mkdir -p out/tmp
 for comp in Landscape Portrait; do
   name=$(echo "$comp" | tr '[:upper:]' '[:lower:]')

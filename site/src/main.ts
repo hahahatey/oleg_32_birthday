@@ -107,7 +107,11 @@ karaoke($('[data-karaoke]'));
 const portrait = matchMedia('(orientation: portrait)');
 const loadHero = (): void => {
   const sources = portrait.matches ? [portraitWebm, portraitMp4] : [landscapeWebm, landscapeMp4];
-  video.replaceChildren(...sources.map((src) => Object.assign(document.createElement('source'), { src })));
+  video.replaceChildren(
+    ...sources.map((src) =>
+      Object.assign(document.createElement('source'), { src, type: src.endsWith('.webm') ? 'video/webm' : 'video/mp4' }),
+    ),
+  );
   video.load();
 };
 loadHero();
