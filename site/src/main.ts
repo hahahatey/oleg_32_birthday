@@ -4,6 +4,10 @@ import { sendBet } from './send';
 import { createSlot, type Slot } from './slot';
 import { playApplause, playFanfare } from './sound';
 import { loadBet, saveBet } from './storage';
+import landscapeMp4 from './media/hero-landscape.mp4';
+import landscapeWebm from './media/hero-landscape.webm';
+import portraitMp4 from './media/hero-portrait.mp4';
+import portraitWebm from './media/hero-portrait.webm';
 import { SONGS_COUNT, type Bet, type Song } from './types';
 
 const $ = <T extends Element>(selector: string): T => document.querySelector<T>(selector)!;
@@ -98,5 +102,13 @@ if (saved) {
 } else revealStage();
 refresh();
 karaoke($('[data-karaoke]'));
-// Re-run <source media> selection when the phone rotates (or DevTools switches device).
-matchMedia('(orientation: portrait)').addEventListener('change', () => video.load());
+
+// Only offer sources for the current orientation, so a failed decode never falls through to the other one.
+const portrait = matchMedia('(orientation: portrait)');
+const loadHero = (): void => {
+  const sources = portrait.matches ? [portraitWebm, portraitMp4] : [landscapeWebm, landscapeMp4];
+  video.replaceChildren(...sources.map((src) => Object.assign(document.createElement('source'), { src })));
+  video.load();
+};
+loadHero();
+portrait.addEventListener('change', loadHero);

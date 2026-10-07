@@ -54,18 +54,15 @@ export const createSlot = ({ index, onChange, taken }: SlotOptions): Slot => {
         item.className = 'suggest__item';
         item.role = 'option';
         item.ariaSelected = String(i === active);
-        item.innerHTML = `<img alt="" loading="lazy"><span></span>`;
-        item.querySelector('img')!.src = option.cover ?? '';
-        item.querySelector('span')!.textContent = option.label;
-        // pointerdown fires before the input blurs, so the pick isn't lost.
-        item.addEventListener('pointerdown', (e) => {
-          e.preventDefault();
-          choose(option);
-        });
+        // Option 0 is always what the person typed, for songs missing from the catalogue.
+        item.innerHTML = i ? `<img alt="" loading="lazy"><span></span>` : `<b>✍️</b><span></span>`;
+        if (i) item.querySelector('img')!.src = option.cover ?? '';
+        item.querySelector('span')!.textContent = i ? option.label : `Оставить как написал: «${option.label}»`;
+        // click (not pointerdown) so a swipe over the list scrolls instead of picking.
+        item.addEventListener('click', () => choose(option));
         return item;
       }),
     );
-    if (!options.length) list.innerHTML = '<li class="suggest__empty">Нет в каталоге — оставим как написал ✍️</li>';
     list.hidden = false;
   };
 
@@ -81,7 +78,9 @@ export const createSlot = ({ index, onChange, taken }: SlotOptions): Slot => {
     debounce = window.setTimeout(async () => {
       search = new AbortController();
       try {
-        options = await searchSongs(term, search.signal);
+        const found = await searchSongs(term, search.signal);
+        const typed: Song = { label: term, cover: null };
+        options = [typed, ...found.filter((f) => f.label.toLowerCase() !== term.toLowerCase())];
         active = -1;
         if (document.activeElement === input) render();
       } catch {
@@ -102,6 +101,8 @@ export const createSlot = ({ index, onChange, taken }: SlotOptions): Slot => {
     } else if (e.key === 'Escape') close();
   });
 
+  // Keep focus in the input while tapping the list, so blur doesn't close it before the click lands.
+  list.addEventListener('mousedown', (e) => e.preventDefault());
   input.addEventListener('blur', close);
   input.addEventListener('focus', () => options.length && input.value.trim().length > 1 && render());
 
