@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0312" />
+    <title>Олег 32 · Караоке</title>
+    <meta name="description" content="Угадай пять песен, которые споют на дне рождения Олега" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎤</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600&family=Pacifico&family=Press+Start+2P&family=Unbounded:wght@600;900&display=swap"
+    />
+  </head>
+  <body>
+    <section class="hero">
+      <video class="hero__video" autoplay muted loop playsinline preload="auto" data-hero-video>
+        <source media="(orientation: portrait)" src="./src/media/hero-portrait.webm" type="video/webm" />
+        <source media="(orientation: portrait)" src="./src/media/hero-portrait.mp4" type="video/mp4" />
+        <source src="./src/media/hero-landscape.webm" type="video/webm" />
+        <source src="./src/media/hero-landscape.mp4" type="video/mp4" />
+      </video>
+      <p class="karaoke" data-karaoke>Угадай пять песен, которые споют этой ночью</p>
+      <a class="cta" href="#setlist">Сделать ставку 🎤</a>
+    </section>
+
+    <main class="stage" id="setlist">
+      <div class="screen">
+        <header class="screen__bar">
+          <span class="screen__rec">● REC</span>
+          <span>КАНАЛ 32</span>
+        </header>
+
+        <form class="setlist" data-form novalidate>
+          <h2 class="title">Твой <em>сет-лист</em></h2>
+          <p class="lead">
+            Впиши 5 песен, которые, по-твоему, точно прозвучат этой ночью. Не знаешь, что выбрать? Жми 🎲
+          </p>
+
+          <label class="field">
+            <span class="field__label">Фамилия Имя Отчество</span>
+            <input class="field__input" name="name" autocomplete="name" placeholder="Иванов Иван Иванович" data-name />
+          </label>
+
+          <ol class="slots" data-slots></ol>
+
+          <button class="submit" type="submit" disabled data-submit></button>
+          <p class="error" role="alert" data-error></p>
+        </form>
+
+        <section class="done" hidden data-done>
+          <p class="score">СЧЁТ <b data-score>000</b></p>
+          <h2 class="title">Ставка принята, <em data-done-name></em>!</h2>
+          <p class="lead">Олег получил твой сет-лист. Увидимся у микрофона.</p>
+          <ol class="records" data-records></ol>
+          <button class="ghost" type="button" data-edit>Изменить ответ</button>
+        </section>
+      </div>
+    </main>
+
+    <template id="slot">
+      <li class="slot">
+        <div class="vinyl">
+          <img class="vinyl__cover" alt="" hidden />
+          <span class="vinyl__num"></span>
+        </div>
+        <div class="slot__field">
+          <input class="slot__input" placeholder="Песня или артист" autocomplete="off" spellcheck="false" />
+          <ul class="suggest" role="listbox" hidden></ul>
+        </div>
+        <button class="dice" type="button" aria-label="Подкинь идею">🎲</button>
+      </li>
+    </template>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
